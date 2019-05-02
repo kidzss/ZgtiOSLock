@@ -58,6 +58,7 @@
 		4BAEF7AE227A79350022B389 /* ZgtiOSLock */ = {
 			isa = PBXGroup;
 			children = (
+				4BAEF7C5227A7EB80022B389 /* iOSLock */,
 				4BAEF7AF227A79350022B389 /* AppDelegate.h */,
 				4BAEF7B0227A79350022B389 /* AppDelegate.m */,
 				4BAEF7B2227A79350022B389 /* ViewController.h */,
@@ -69,6 +70,13 @@
 				4BAEF7BE227A79380022B389 /* main.m */,
 			);
 			path = ZgtiOSLock;
+			sourceTree = "<group>";
+		};
+		4BAEF7C5227A7EB80022B389 /* iOSLock */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = iOSLock;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
