@@ -53,8 +53,8 @@
 //    [self testSemaphore];
 //    [self testMutex];
 //    [self testNSLock];
-//    [self testConditionLock];
-    [self testSynchronized];
+    [self testConditionLock];
+//    [self testSynchronized];
 }
 
 - (void)testSpinlock {
@@ -194,7 +194,7 @@
         if(number == 0) {
             end = CFAbsoluteTimeGetCurrent();
             NSLog(@"Synchronized test result %f",end - begin);
-            //ConditionLock test result 0.022440
+            //Synchronized test result 0.021929
         }
         number--;
     }
