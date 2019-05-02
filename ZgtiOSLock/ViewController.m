@@ -40,8 +40,8 @@
     self.title = @"iOS Lock";
     spinlock = OS_SPINLOCK_INIT;
     diapatchQueue = dispatch_queue_create("com.testiOSLock.queue", DISPATCH_QUEUE_CONCURRENT);
-        timerGap= 5.0f;
-        gap = 30;
+    timerGap= 5.0f;
+    gap = 60;
     
     unfairLock = &(OS_UNFAIR_LOCK_INIT);
     semaphore = dispatch_semaphore_create(1);
@@ -54,7 +54,7 @@
     lock = [[NSLock alloc] init];
     recursiveLock = [[NSRecursiveLock alloc] init];
     conditionLock = [[NSConditionLock alloc] init];
-    testFuncArr = @[@"testSpinlock",@"testSemaphore",@"testMutex",@"testNSLock",@"testConditionLock",@"testSynchronized"];
+    testFuncArr = @[@"testSpinlock",@"testSemaphore",@"testMutex",@"testNSLock",@"testRecursiveLock",@"testConditionLock",@"testSynchronized"];
 //    [self testSpinlock];
 //    [self testSemaphore];
 //    [self testMutex];
@@ -66,6 +66,8 @@
 -(void)numberReset {
     customer = 100000;
     number = 99000;
+    begin = 0.0;
+    end = 0.0;
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -144,7 +146,6 @@
     if(number == 0) {
         end = CFAbsoluteTimeGetCurrent();
         NSLog(@"Mutex test result %f",end - begin);
-        //Mutex test result 0.021771
     }
     number--;
     pthread_mutex_unlock(&mutex);
@@ -165,7 +166,6 @@
     if(number == 0) {
         end = CFAbsoluteTimeGetCurrent();
         NSLog(@"NSLock test result %f",end - begin);
-        //NSLock test result 0.014743
     }
     number--;
     [lock unlock];
@@ -186,7 +186,6 @@
     if(number == 0) {
         end = CFAbsoluteTimeGetCurrent();
         NSLog(@"RecursiveLock test result %f",end - begin);
-        //RecursiveLock test result 0.020444
     }
     number--;
     [recursiveLock unlock];
@@ -209,7 +208,6 @@
     if(number == 0) {
         end = CFAbsoluteTimeGetCurrent();
         NSLog(@"ConditionLock test result %f",end - begin);
-        //ConditionLock test result 0.022440
     }
     number--;
     [conditionLock unlock];
@@ -231,7 +229,6 @@
         if(number == 0) {
             end = CFAbsoluteTimeGetCurrent();
             NSLog(@"Synchronized test result %f",end - begin);
-            //Synchronized test result 0.021929
         }
         number--;
     }
