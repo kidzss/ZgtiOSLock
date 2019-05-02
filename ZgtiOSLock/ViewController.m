@@ -24,6 +24,10 @@
     NSLock *lock;
     NSRecursiveLock *recursiveLock;
     NSConditionLock *conditionLock;// = [[NSConditionLock alloc] init];
+    float timerGap;// = 5.0f
+    NSArray *testFuncArr;
+    NSUInteger customer;
+    float gap;
 }
 
 @end
@@ -36,11 +40,12 @@
     self.title = @"iOS Lock";
     spinlock = OS_SPINLOCK_INIT;
     diapatchQueue = dispatch_queue_create("com.testiOSLock.queue", DISPATCH_QUEUE_CONCURRENT);
-    number = 500;
+        timerGap= 5.0f;
+        gap = 30;
     
     unfairLock = &(OS_UNFAIR_LOCK_INIT);
     semaphore = dispatch_semaphore_create(1);
-
+    
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
     pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_NORMAL);  // 定义锁的属性
@@ -49,17 +54,43 @@
     lock = [[NSLock alloc] init];
     recursiveLock = [[NSRecursiveLock alloc] init];
     conditionLock = [[NSConditionLock alloc] init];
+    testFuncArr = @[@"testSpinlock",@"testSemaphore",@"testMutex",@"testNSLock",@"testConditionLock",@"testSynchronized"];
 //    [self testSpinlock];
 //    [self testSemaphore];
 //    [self testMutex];
 //    [self testNSLock];
-    [self testConditionLock];
+//    [self testConditionLock];
 //    [self testSynchronized];
 }
 
+-(void)numberReset {
+    customer = 100000;
+    number = 99000;
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self autoTest];
+}
+
+- (float)theTimeGap {
+    timerGap = timerGap + gap;
+    return timerGap;
+}
+
+- (void)autoTest {
+    NSUInteger count = testFuncArr.count;
+    for (int i=0; i<count; i++) {
+        NSTimer*timer = [NSTimer timerWithTimeInterval:[self theTimeGap] target:self selector:NSSelectorFromString(testFuncArr[i]) userInfo:nil repeats:NO];
+        [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    }
+}
+
 - (void)testSpinlock {
+    [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < customer; i++) {
         dispatch_async(diapatchQueue, ^{
             [self sellTicketSpinlock];
         });
@@ -78,8 +109,9 @@
 }
 
 - (void)testSemaphore {
+    [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < customer; i++) {
         dispatch_async(diapatchQueue, ^{
             [self sellTicketSemaphore];
         });
@@ -98,8 +130,9 @@
 }
 
 - (void)testMutex {
+    [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < customer; i++) {
         dispatch_async(diapatchQueue, ^{
             [self sellTicketMutex];
         });
@@ -118,8 +151,9 @@
 }
 
 - (void)testNSLock {
+    [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < customer; i++) {
         dispatch_async(diapatchQueue, ^{
             [self sellTicketNSLock];
         });
@@ -138,8 +172,9 @@
 }
 
 - (void)testRecursiveLock {
+    [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < customer; i++) {
         dispatch_async(diapatchQueue, ^{
             [self sellTicketRecursiveLock];
         });
@@ -158,8 +193,9 @@
 }
 
 - (void)testConditionLock {
+    [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < customer; i++) {
         dispatch_async(diapatchQueue, ^{
             [self sellTicketConditionLock];
         });
@@ -180,8 +216,9 @@
 }
 
 - (void)testSynchronized {
+    [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < customer; i++) {
         dispatch_async(diapatchQueue, ^{
             [self sellTicketSynchronized];
         });
@@ -203,7 +240,7 @@
 //不支持并发模式
 - (void)testUnfairLock {
     begin = CFAbsoluteTimeGetCurrent();
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < customer; i++) {
         dispatch_async(diapatchQueue, ^{
             [self sellTicketUnfairLock];
         });
