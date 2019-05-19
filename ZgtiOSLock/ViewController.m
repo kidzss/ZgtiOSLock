@@ -14,7 +14,7 @@
 {
     OSSpinLock spinlock;
     os_unfair_lock_t unfairLock;
-    NSInteger number;
+    __block NSInteger number;
     dispatch_queue_t diapatchQueue;
     CFTimeInterval end;
     CFTimeInterval begin;
@@ -55,15 +55,9 @@
     recursiveLock = [[NSRecursiveLock alloc] init];
     conditionLock = [[NSConditionLock alloc] init];
     testFuncArr = @[@"testSpinlock",@"testSemaphore",@"testMutex",@"testNSLock",@"testRecursiveLock",@"testConditionLock",@"testSynchronized"];
-//    [self testSpinlock];
-//    [self testSemaphore];
-//    [self testMutex];
-//    [self testNSLock];
-//    [self testConditionLock];
-//    [self testSynchronized];
 }
 
--(void)numberReset {
+- (void)numberReset {
     customer = 100000;
     number = 99000;
     begin = 0.0;
@@ -93,9 +87,11 @@
     [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
     for (int i = 0; i < customer; i++) {
-        dispatch_async(diapatchQueue, ^{
-            [self sellTicketSpinlock];
-        });
+        if (number > 0) {
+            dispatch_async(diapatchQueue, ^{
+                [self sellTicketSpinlock];
+            });
+        }
     }
 }
 
@@ -114,9 +110,11 @@
     [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
     for (int i = 0; i < customer; i++) {
-        dispatch_async(diapatchQueue, ^{
-            [self sellTicketSemaphore];
-        });
+        if (number > 0) {
+            dispatch_async(diapatchQueue, ^{
+                [self sellTicketSemaphore];
+            });
+        }
     }
 }
 
@@ -135,9 +133,11 @@
     [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
     for (int i = 0; i < customer; i++) {
-        dispatch_async(diapatchQueue, ^{
-            [self sellTicketMutex];
-        });
+        if (number>0) {
+            dispatch_async(diapatchQueue, ^{
+                [self sellTicketMutex];
+            });
+        }
     }
 }
 
@@ -146,6 +146,7 @@
     if(number == 0) {
         end = CFAbsoluteTimeGetCurrent();
         NSLog(@"Mutex test result %f",end - begin);
+        return;
     }
     number--;
     pthread_mutex_unlock(&mutex);
@@ -155,9 +156,11 @@
     [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
     for (int i = 0; i < customer; i++) {
-        dispatch_async(diapatchQueue, ^{
-            [self sellTicketNSLock];
-        });
+        if (number>0) {
+            dispatch_async(diapatchQueue, ^{
+                [self sellTicketNSLock];
+            });
+        }
     }
 }
 
@@ -175,9 +178,11 @@
     [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
     for (int i = 0; i < customer; i++) {
-        dispatch_async(diapatchQueue, ^{
-            [self sellTicketRecursiveLock];
-        });
+        if (number>0) {
+            dispatch_async(diapatchQueue, ^{
+                [self sellTicketRecursiveLock];
+            });
+        }
     }
 }
 
@@ -195,9 +200,11 @@
     [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
     for (int i = 0; i < customer; i++) {
-        dispatch_async(diapatchQueue, ^{
-            [self sellTicketConditionLock];
-        });
+        if (number>0) {
+            dispatch_async(diapatchQueue, ^{
+                [self sellTicketConditionLock];
+            });
+        }
     }
 }
 
@@ -217,9 +224,11 @@
     [self numberReset];
     begin = CFAbsoluteTimeGetCurrent();
     for (int i = 0; i < customer; i++) {
-        dispatch_async(diapatchQueue, ^{
-            [self sellTicketSynchronized];
-        });
+        if (number>0) {
+            dispatch_async(diapatchQueue, ^{
+                [self sellTicketSynchronized];
+            });
+        }
     }
 }
 
@@ -238,9 +247,11 @@
 - (void)testUnfairLock {
     begin = CFAbsoluteTimeGetCurrent();
     for (int i = 0; i < customer; i++) {
-        dispatch_async(diapatchQueue, ^{
-            [self sellTicketUnfairLock];
-        });
+        if (number>0) {
+            dispatch_async(diapatchQueue, ^{
+                [self sellTicketUnfairLock];
+            });
+        }
     }
 }
 //
